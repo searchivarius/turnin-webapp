@@ -8,12 +8,18 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Date
 import scalate.ScalateSupport
+import scala.sys.process._
 
 import org.scalatra.fileupload.FileUploadSupport
 
 import org.apache.commons.compress.archivers.tar._
 
+
 object Files {
+  def runScript(scriptName : String, fileName: String) = {
+    Process(scriptName + " " + fileName)
+  }
+
   def isGzip(file: File) = {
     try {
       val in = new DataInputStream(new FileInputStream(file))
@@ -66,8 +72,9 @@ object Files {
 // this directory came from git clone git://github.com/scalatra/scalatra-sbt-prototype.git my-app
 // can be run locally with sbt '~jetty-run'
 class TurninWebApp extends ScalatraFilter with ScalateSupport with FileUploadSupport {
+        
   val conf: Map[String, String] = {
-    val confFile = "data/turnin.conf"
+    val confFile = "turnin.conf"
     val props = new java.util.Properties
     val in = new FileInputStream(confFile)
     props.load(in)
@@ -81,6 +88,7 @@ class TurninWebApp extends ScalatraFilter with ScalateSupport with FileUploadSup
   val receiptLogFile = conf("receiptLogFile")
   val manifestFile = conf("manifestFile")
   val pageTitle = conf("pageTitle")
+  val checkScript = conf("checkScript")
 
   if(!new File(uploadDir).exists) {
     throw new RuntimeException("Upload directory not found: %s".format(new File(uploadDir).getAbsolutePath))
@@ -105,7 +113,7 @@ class TurninWebApp extends ScalatraFilter with ScalateSupport with FileUploadSup
 	</tr></table>
         <form method="post" enctype="multipart/form-data">
 	  <table border="0">
-	    <tr><td>Real Name:</td><td><input type="text" name="name" /></td></tr>
+	    <tr><td>Andrew ID:</td><td><input type="text" name="name" /></td></tr>
             <tr><td>Submission (tar.gz with required files)</td><td><input type="file" name="file" /></td></tr>
             <tr><td colspan="2"><center><input type="submit" /></center></td></tr>
           </table>
@@ -123,6 +131,7 @@ class TurninWebApp extends ScalatraFilter with ScalateSupport with FileUploadSup
     println(fileParams)
 
     var failed = false
+    var consistCheckDone = false
 
 //    val user: String = params("user")
     val realName: String = params("name").replace(' ', '_')
@@ -170,6 +179,31 @@ class TurninWebApp extends ScalatraFilter with ScalateSupport with FileUploadSup
           }
         }
       }
+      {
+        if (!failed) { 
+          consistCheckDone = true
+          val cmd = Files.runScript(checkScript, file.getAbsolutePath())
+          if (cmd.! != 0) {
+            failed = true
+          }
+          if (failed) {
+            for ((line) <- cmd.lines_!) yield {
+              <div> {line} </div>
+            }
+          }
+        }
+      }
+      {
+        if (consistCheckDone) {
+          val msg = "Consistency check"
+      
+          if(!failed) {
+            { <b>{msg} </b><font color="green"><b>Yes.</b></font><br/> }
+          } else {
+	          { <b>{msg} </b><font color="red"><b>NO.</b></font><br/> }
+          }
+        }
+      }
       </body>
       {
 	if(!failed) {
@@ -180,6 +214,8 @@ class TurninWebApp extends ScalatraFilter with ScalateSupport with FileUploadSup
 			       receipt
 			       }<br/>
 	  You must keep this in a safe place as proof that you turned in your assignment. (Copy-paste so that you don't make transcription mistakes.)<br/></div>
+        } else {
+            { <div><b><font color="red">Submission failed!</font></b></div> }
         }
       }
     </html>

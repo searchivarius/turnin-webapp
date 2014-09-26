@@ -1,8 +1,10 @@
 Turnin Webapp
 =============
 
-Written By Jonathan Clark 2011
-For 11-711 at Carnegie Mellon University
+Originally written By Jonathan Clark 2011
+For 11-711 at Carnegie Mellon University. 
+Modified for Leonid Boytsov in 2014 by adding
+a call to a script that can verify archive's consistency.
 
 
 Overview
@@ -38,9 +40,7 @@ Now have a look at your turnin server running at http://localhost:8081
 Configuration
 =============
 
-Edit data/turnin.conf
-
-You can configure which files should be expected in the submission by editing data/manifest.txt
+Edit turnin.conf
 
 You can change the logo by replacing webapps/turnin/logo.png
 
@@ -80,7 +80,7 @@ Manually Generating a Receipt
 You should never need to do this manually since the webapp does this for you. But just in case:
 
 ```bash
-./generate.sh data/key.bin start.jar
+./generate.sh key.bin start.jar
 ```
 
 Future Features
