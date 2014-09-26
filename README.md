@@ -10,7 +10,7 @@ a call to a script that can verify archive's consistency.
 Overview
 ========
 
-A tool for instructors that allows students to submit .tgz files using a web interface.
+A tool for instructors that allows students to submit *.tar.gz* files using a web interface.
 
 Features:
 
