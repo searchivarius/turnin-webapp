@@ -42,7 +42,21 @@ Configuration
 
 Edit turnin.conf
 
-You can change the logo by replacing webapps/turnin/logo.png
+Several parameters can be changed:
+
+* uploadDir a directory to upload files
+* keyFile a file with the key (keep the same for all homeworks)
+* receiptLogFile a file with receipts (make it homework specific)
+* manifestFile a list of files that must be present (make it homework specific)
+* checkScript a script that checks a submitted tar.gz archive for consistency (make it homework specific)
+* pageTitle A title of the submission page
+
+You can change the logo by replacing webapps/turnin/logo.png . Currently, the logo is transparent.
+
+Checking script
+=====================
+
+One *must* specify a checking script that accepts that submitted archive as an argument. If the script succeds, it should return 0 and a non-zero status should be produced otherwise. In the case of error, the standard output *is printed to the submitted page*. 
 
 
 Working with Receipts
@@ -54,7 +68,7 @@ Generating an Encryption Key for Turnin Receipts
 You'll need to generate a unique secret key, which will be used to generate recepts. Make sure to keep this secret from the people who you will be giving receipts to.
 
 ```
-./keygen.sh key.bin
+./keygen.sh data/key.bin
 ```
 
 Verifying the Time and MD5 Checksum of a Submission
@@ -64,7 +78,7 @@ Given the receipt (e.g. a362b2bf7cd6dc646e7fabc478208752), you can verify the ti
 If the student also provides the file they claim to have submitted, you can also verify the file's contents.
 
 ```
-./view.sh key.bin a362b2bf7cd6dc646e7fabc478208752
+./view.sh data/key.bin a362b2bf7cd6dc646e7fabc478208752
 md5sum file_student_claims_submitted.tar.gz
 ```
 
@@ -80,7 +94,7 @@ Manually Generating a Receipt
 You should never need to do this manually since the webapp does this for you. But just in case:
 
 ```bash
-./generate.sh key.bin start.jar
+./generate.sh data/key.bin start.jar
 ```
 
 Future Features
