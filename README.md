@@ -10,7 +10,7 @@ a call to a script that can verify archive's consistency.
 Overview
 ========
 
-A tool for instructors that allows students to submit *.tar.gz* files using a web interface.
+A tool for instructors that allows students to submit **.tar.gz** files using a web interface.
 
 Features:
 
@@ -51,12 +51,14 @@ Several parameters can be changed:
 * checkScript a script that checks a submitted tar.gz archive for consistency (make it homework specific)
 * pageTitle A title of the submission page
 
+A **sample configuration** is provided. In this configuration, files are uploaded to the directory data/hw2
+
 You can change the logo by replacing webapps/turnin/logo.png . Currently, the logo is transparent.
 
 Checking script
 =====================
 
-One *must* specify a checking script that accepts that submitted archive as an argument. If the script succeds, it should return 0 and a non-zero status should be produced otherwise. In the case of error, the standard output *is printed to the submitted page*. 
+One **must** specify a checking script that accepts that submitted archive as an argument. If the script succeds, it should return 0 and a non-zero status should be produced otherwise. In the case of error, the standard output *is printed to the submitted page*. 
 
 
 Working with Receipts
