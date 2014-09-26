@@ -102,6 +102,7 @@ You should never need to do this manually since the webapp does this for you. Bu
 Future Features
 ===============
 
+* The build.sh hardcodes location of scala libraries, but this can probably be fixed
 * Protection against bots
 
 
