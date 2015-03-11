@@ -3,8 +3,7 @@ Turnin Webapp
 
 Originally written By Jonathan Clark 2011
 For 11-711 at Carnegie Mellon University. 
-Modified for Leonid Boytsov in 2014 by adding
-a possibility to call a custom script that verifies archive's consistency.
+Modified for Leonid Boytsov in 2014 by makeing it possible to call a custom script that verifies archive's consistency.
 
 
 Overview
